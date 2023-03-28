@@ -1,13 +1,24 @@
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using System.Drawing.Imaging;
+using System.Text.RegularExpressions;
+using System.Drawing;
+using Emgu.CV;
+using Emgu.Util;
+using Emgu.CV.Structure;
+using Emgu.CV.CvEnum;
+using CascadeClassifier = Emgu.CV.CascadeClassifier;
 
 namespace Male_Or_Female
 {
     public partial class Form1 : Form
     {
-        VideoCapture capture;
-        Mat frame;
+        // used for drawing
+        OpenCvSharp.CascadeClassifier haar;
+
+        // used for image capturing
+        OpenCvSharp.VideoCapture capture;
+        OpenCvSharp.Mat frame;
         Bitmap image;
         
         public Form1()
@@ -15,8 +26,8 @@ namespace Male_Or_Female
 
             InitializeComponent();
 
-            frame = new Mat();
-            capture = new VideoCapture(0);
+            frame = new OpenCvSharp.Mat();
+            capture = new OpenCvSharp.VideoCapture(0);
             capture.Open(0);
         }
 
@@ -33,11 +44,8 @@ namespace Male_Or_Female
 
             // save Image bitmap as a jpg in the image folder
             myImageCodecInfo = GetEncoderInfo("image/jpeg");
-
             myEncoder = Encoder.Quality;
-
             myEncoderParameters = new EncoderParameters(1);
-
             myEncoderParameter = new EncoderParameter(myEncoder, 25L);
             myEncoderParameters.Param[0] = myEncoderParameter;
 
@@ -85,8 +93,34 @@ namespace Male_Or_Female
                 {
                     pictureBox1.Image.Dispose();
                 }
+                // use open cv to detect faces
+                haar = new OpenCvSharp.CascadeClassifier("haarcascade_frontalface_default.xml");
+                var faces = haar.DetectMultiScale(frame);
+                foreach (var face in faces)
+                {
+                    Cv2.Rectangle(frame, face, Scalar.Red, 3);
+                }
+                // convert frame to bitmap
+                image = BitmapConverter.ToBitmap(frame);
                 pictureBox1.Image = image;
             }
+        }
+        // conver image to byte[*,*,*]
+        public static byte[,,] ImageToByte(Image img)
+        {
+            Bitmap bmp = new Bitmap(img);
+            byte[,,] result = new byte[bmp.Height, bmp.Width, 3];
+            for (int i = 0; i < bmp.Height; i++)
+            {
+                for (int j = 0; j < bmp.Width; j++)
+                {
+                    Color pixel = bmp.GetPixel(j, i);
+                    result[i, j, 0] = pixel.B;
+                    result[i, j, 1] = pixel.G;
+                    result[i, j, 2] = pixel.R;
+                }
+            }
+            return result;
         }
     }
 }
