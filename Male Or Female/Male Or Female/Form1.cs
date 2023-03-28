@@ -1,13 +1,6 @@
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using System.Drawing.Imaging;
-using System.Text.RegularExpressions;
-using System.Drawing;
-using Emgu.CV;
-using Emgu.Util;
-using Emgu.CV.Structure;
-using Emgu.CV.CvEnum;
-using CascadeClassifier = Emgu.CV.CascadeClassifier;
 
 namespace Male_Or_Female
 {
