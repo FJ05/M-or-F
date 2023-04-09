@@ -28,6 +28,7 @@ namespace Male_Or_Female
         {
             // Takes a photo
             // stops the camera
+            // This is to prevent the camera from taking a photo while the image is being processed
             timer2.Stop();
 
             ImageCodecInfo myImageCodecInfo;
@@ -45,12 +46,11 @@ namespace Male_Or_Female
             image.Save("image.jpg", myImageCodecInfo, myEncoderParameters);
 
             // fetch image
-
             // path is the path to the image which is located in bin/debug/net6.0-windows
             var path = "image.jpg";
 
 
-            // Make the Ai generate a guess based on the image
+            // Makes the Ai generate a guess based on the image
             // Load sample data
             var imageBytes = File.ReadAllBytes(path);
             MLModel1.ModelInput sampleData = new MLModel1.ModelInput()
@@ -99,6 +99,8 @@ namespace Male_Or_Female
             }
         }
         // conver image to byte[*,*,*]
+        // this is used to convert the image to a format that the Ai can understand
+        // THIS IS NOT MY CODE I FOUND IT ON THE INTERNET AND I DONT KNOW HOW IT WORKS BUT IT WORKS SO I AM USING IT
         public static byte[,,] ImageToByte(Image img)
         {
             Bitmap bmp = new Bitmap(img);
