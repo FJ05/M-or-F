@@ -5,3 +5,8 @@ The training data was pictures of studens at my school and stock-images. This le
 
 # flowchart describing the machine learning process
 <img title="Simplified Flowchart" alt="Simplified Flowchart for ML.Net" src="/images/Simplified m or f flowchart.png">
+
+<style>
+    .markdown-body {
+        background-color: white;
+}
